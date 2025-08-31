@@ -1,4 +1,5 @@
 import ModalDetailPokemon from '@/components/organisms/Modals/DetailPokemon';
+import { usePokemons } from '@/hooks/pokemon.hook';
 import { Center, Flex, Paper, SimpleGrid, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLeaf, IconPokeball, IconTriangleFilled } from '@tabler/icons-react';
@@ -9,6 +10,7 @@ import React from 'react';
 const PokemonList = () => {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure();
+  const { data: pokemonData } = usePokemons();
 
   const handleOpenDetail = () => {
     router.push('?pokemonid=1', undefined, { scroll: false });
@@ -49,7 +51,7 @@ const PokemonList = () => {
         cols={3}
         spacing={32}
       >
-        {Array.from({ length: 20 }).map((item, index) => (
+        {pokemonData?.data?.map((item, index) => (
           <Paper
             key={index}
             className="cursor-pointer"
@@ -78,10 +80,10 @@ const PokemonList = () => {
               <Flex w={'100%'} align={'center'} justify={'space-between'}>
                 <Flex direction={'column'}>
                   <Text fz={13} fw={500} c={'#7A7D80'} lh={'150%'} lts={'0%'}>
-                    #001
+                    #{item.id}
                   </Text>
-                  <Text fz={18} fw={600} c={'#2F3133'} lh={'150%'} lts={'0%'}>
-                    Bulbasaur
+                  <Text fz={18} fw={600} c={'#2F3133'} lh={'150%'} lts={'0%'} tt={'capitalize'}>
+                    {item.name}
                   </Text>
                 </Flex>
                 <IconLeaf />

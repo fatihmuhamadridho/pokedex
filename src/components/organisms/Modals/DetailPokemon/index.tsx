@@ -39,7 +39,7 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
             height={236}
           />
         </Box>
-        <Flex w={'100%'} h={'100%'} pt={35} pr={46} direction={'column'}>
+        <Flex w={'100%'} h={'100%'} pt={32} pr={46} direction={'column'}>
           <Flex align={'center'} gap={8}>
             <Text fz={28} fw={'bold'} lh={'100%'} lts={'-1%'} c={'#2F3133'}>
               Charmeleon
