@@ -15,6 +15,7 @@ const BannerImage = (props: BannerImageProps) => {
       alt={`bg_${variant}`}
       width={1440}
       height={706}
+      priority
     />
   );
 };

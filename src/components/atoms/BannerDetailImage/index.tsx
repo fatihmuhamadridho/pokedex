@@ -21,13 +21,13 @@ const BannerDetailImage = (props: BannerDetailImageProps) => {
           opacity="0.1"
           d="M-59 96.709C26.7697 96.709 97 169.304 97 259.735C97 350.167 26.7697 422.762 -59 422.762C-144.77 422.762 -215 350.167 -215 259.735C-215 169.304 -144.77 96.709 -59 96.709Z"
           stroke="url(#paint2_linear_8803_24190)"
-          stroke-width="20"
+          strokeWidth="20"
         />
         <path
           opacity="0.1"
           d="M-59 30.9307C64.3277 30.9307 165.069 135.272 165.069 264.947C165.069 394.623 64.3276 498.964 -59 498.964C-182.328 498.964 -283.069 394.623 -283.069 264.947C-283.069 135.272 -182.328 30.9307 -59 30.9307Z"
           stroke="url(#paint3_linear_8803_24190)"
-          stroke-width="21.8605"
+          strokeWidth="21.8605"
         />
       </g>
       <defs>
@@ -39,8 +39,8 @@ const BannerDetailImage = (props: BannerDetailImageProps) => {
           y2="245.34"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#D6EBDC" />
-          <stop offset="1" stop-color="#E3FFA7" />
+          <stop stopColor="#D6EBDC" />
+          <stop offset="1" stopColor="#E3FFA7" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_8803_24190"
@@ -50,8 +50,8 @@ const BannerDetailImage = (props: BannerDetailImageProps) => {
           y2="215.199"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#D6EBDC" />
-          <stop offset="1" stop-color="#E3FFA7" />
+          <stop stopColor="#D6EBDC" />
+          <stop offset="1" stopColor="#E3FFA7" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_8803_24190"
@@ -61,8 +61,8 @@ const BannerDetailImage = (props: BannerDetailImageProps) => {
           y2="340.262"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#68AE28" />
-          <stop offset="1" stop-color="#68AE28" />
+          <stop stopColor="#68AE28" />
+          <stop offset="1" stopColor="#68AE28" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_8803_24190"
@@ -72,8 +72,8 @@ const BannerDetailImage = (props: BannerDetailImageProps) => {
           y2="378.945"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#68AE28" />
-          <stop offset="1" stop-color="#68AE28" />
+          <stop stopColor="#68AE28" />
+          <stop offset="1" stopColor="#68AE28" />
         </linearGradient>
       </defs>
     </svg>

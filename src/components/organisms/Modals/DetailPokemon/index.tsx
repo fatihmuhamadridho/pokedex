@@ -1,3 +1,4 @@
+import { Pokemon } from '@/@core/domains/models/pokemon';
 import BannerDetailImage from '@/components/atoms/BannerDetailImage';
 import { Box, Flex, Modal, Paper, Progress, Text, UnstyledButton } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
@@ -7,10 +8,34 @@ import React from 'react';
 interface ModalDetailPokemonProps {
   opened: boolean;
   onClose: () => void;
+  data: Pokemon;
 }
 
 const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
-  const { opened, onClose } = props;
+  const { opened, onClose, data } = props;
+  const statLabels: Record<keyof typeof data.statistics, string> = {
+    health_power: 'HP',
+    attack: 'Serangan',
+    defense: 'Pertahanan',
+    sp_attack: 'Sp. Serangan',
+    sp_defense: 'Sp. Pertahanan',
+    speed: 'Kecepatan',
+  };
+
+  function renderSegments(value: number, max = 100, segments = 5) {
+    const percent = (value / max) * 100;
+    const activeSegments = Math.round((percent / 100) * segments);
+
+    return Array.from({ length: segments }).map((_, i) => (
+      <Progress
+        key={i}
+        w="20%"
+        h={6}
+        value={i < activeSegments ? 100 : 0}
+        color={i < activeSegments ? 'blue' : 'gray'}
+      />
+    ));
+  }
 
   return (
     <Modal
@@ -30,26 +55,29 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
       <Flex h={'100%'} align={'start'} gap={74}>
         <Box className="relative">
           <BannerDetailImage width={191} height={508} />
-          <Image
-            className="absolute inset-0 top-1/4 left-[28px]"
-            src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/16.svg'}
-            style={{ width: 236, height: 236 }}
-            alt="pokemon"
-            width={236}
-            height={236}
-          />
+          <Box className="absolute inset-0 top-[30%] left-[7px]" style={{ width: 220, height: 220 }}>
+            <Image
+              src={data.image || '/assets/pokeball.png'}
+              alt={`pokemon-${data.name}`}
+              fill
+              sizes="236px"
+              style={{ objectFit: 'contain' }}
+              placeholder="blur"
+              blurDataURL="/assets/pokeball.png"
+            />
+          </Box>
         </Box>
         <Flex w={'100%'} h={'100%'} pt={32} pr={46} direction={'column'}>
           <Flex align={'center'} gap={8}>
-            <Text fz={28} fw={'bold'} lh={'100%'} lts={'-1%'} c={'#2F3133'}>
-              Charmeleon
+            <Text fz={28} fw={'bold'} lh={'100%'} lts={'-1%'} c={'#2F3133'} tt={'capitalize'}>
+              {data.name}
             </Text>
             <Text fz={16} fw={'normal'} lh={'100%'} lts={'-1%'} c={'#7A7D80'}>
-              #005
+              #{data.id.padStart(3, '0')}
             </Text>
           </Flex>
           <Flex align={'center'} gap={10}>
-            {Array.from({ length: 3 }).map((item, index) => (
+            {data.type.map((item, index) => (
               <Paper
                 key={index}
                 className="flex items-center justify-center w-max !bg-[#E96303]/[10%]"
@@ -61,8 +89,9 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
                 fw={600}
                 lh={'100%'}
                 lts={'-1%'}
+                tt={'capitalize'}
               >
-                Fogo
+                {item}
               </Paper>
             ))}
           </Flex>
@@ -72,7 +101,7 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
                 Tinggi
               </Text>
               <Text fz={14} fw={600} lh={'100%'} lts={'-1%'}>
-                0.7m
+                {data.height}m
               </Text>
             </Flex>
             <Flex direction={'column'} gap={4}>
@@ -80,15 +109,15 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
                 Berat
               </Text>
               <Text fz={14} fw={600} lh={'100%'} lts={'-1%'}>
-                13.0kg
+                {data.weight}kg
               </Text>
             </Flex>
             <Flex direction={'column'} gap={4}>
               <Text fz={13} fw={400} lh={'100%'} lts={'-1%'}>
                 Keterampilan
               </Text>
-              <Text fz={14} fw={600} lh={'100%'} lts={'-1%'}>
-                Crescer demais
+              <Text fz={14} fw={600} lh={'100%'} lts={'-1%'} tt={'capitalize'}>
+                {data.skill}
               </Text>
             </Flex>
           </Flex>
@@ -97,7 +126,7 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
               Kelemahan
             </Text>
             <Flex align={'center'} wrap={'wrap'} gap={10}>
-              {Array.from({ length: 4 }).map((item, index) => (
+              {data.weakness.map((item, index) => (
                 <Paper
                   key={index}
                   className="flex items-center justify-center w-max !bg-[#E96303]/[10%]"
@@ -119,78 +148,16 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
               Statistik
             </Text>
             <Flex direction="column" gap={12} w="100%">
-              <Flex align="center" gap={12} w="100%">
-                <Text fz={12} fw={400} c="#7A7D80" w={120}>
-                  HP
-                </Text>
-                <Flex w="100%" gap={4}>
-                  <Progress w="20%" h={3} value={100} />
-                  <Progress w="20%" h={3} value={80} />
-                  <Progress w="20%" h={3} value={60} />
-                  <Progress w="20%" h={3} value={40} />
-                  <Progress w="20%" h={3} value={20} />
+              {Object.entries(data.statistics).map(([key, value]) => (
+                <Flex key={key} align="center" gap={12} w="100%">
+                  <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                    {statLabels[key as keyof typeof statLabels]}
+                  </Text>
+                  <Flex w="100%" gap={4}>
+                    {renderSegments(value)}
+                  </Flex>
                 </Flex>
-              </Flex>
-              <Flex align="center" gap={12} w="100%">
-                <Text fz={12} fw={400} c="#7A7D80" w={120}>
-                  Serangan
-                </Text>
-                <Flex w="100%" gap={4}>
-                  <Progress w="20%" h={3} value={100} />
-                  <Progress w="20%" h={3} value={80} />
-                  <Progress w="20%" h={3} value={60} />
-                  <Progress w="20%" h={3} value={40} />
-                  <Progress w="20%" h={3} value={20} />
-                </Flex>
-              </Flex>
-              <Flex align="center" gap={12} w="100%">
-                <Text fz={12} fw={400} c="#7A7D80" w={120}>
-                  Pertahanan
-                </Text>
-                <Flex w="100%" gap={4}>
-                  <Progress w="20%" h={3} value={100} />
-                  <Progress w="20%" h={3} value={80} />
-                  <Progress w="20%" h={3} value={60} />
-                  <Progress w="20%" h={3} value={40} />
-                  <Progress w="20%" h={3} value={20} />
-                </Flex>
-              </Flex>
-              <Flex align="center" gap={12} w="100%">
-                <Text fz={12} fw={400} c="#7A7D80" w={120}>
-                  Sp. Serangan
-                </Text>
-                <Flex w="100%" gap={4}>
-                  <Progress w="20%" h={3} value={100} />
-                  <Progress w="20%" h={3} value={80} />
-                  <Progress w="20%" h={3} value={60} />
-                  <Progress w="20%" h={3} value={40} />
-                  <Progress w="20%" h={3} value={20} />
-                </Flex>
-              </Flex>
-              <Flex align="center" gap={12} w="100%">
-                <Text fz={12} fw={400} c="#7A7D80" w={120}>
-                  Sp. Pertahanan
-                </Text>
-                <Flex w="100%" gap={4}>
-                  <Progress w="20%" h={3} value={100} />
-                  <Progress w="20%" h={3} value={80} />
-                  <Progress w="20%" h={3} value={60} />
-                  <Progress w="20%" h={3} value={40} />
-                  <Progress w="20%" h={3} value={20} />
-                </Flex>
-              </Flex>
-              <Flex align="center" gap={12} w="100%">
-                <Text fz={12} fw={400} c="#7A7D80" w={120}>
-                  Kecepatan
-                </Text>
-                <Flex w="100%" gap={4}>
-                  <Progress w="20%" h={3} value={100} />
-                  <Progress w="20%" h={3} value={80} />
-                  <Progress w="20%" h={3} value={60} />
-                  <Progress w="20%" h={3} value={40} />
-                  <Progress w="20%" h={3} value={20} />
-                </Flex>
-              </Flex>
+              ))}
             </Flex>
           </Flex>
         </Flex>

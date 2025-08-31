@@ -4,4 +4,5 @@ import { BaseResponse } from '../types/base.type';
 
 export interface PokemonRepository {
   getAll(params?: any): Promise<BaseResponse<Pokemon[]>>;
+  getDetail(params?: any): Promise<BaseResponse<Pokemon>>;
 }

@@ -1,15 +1,41 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Pokemon } from '@/@core/domains/models/pokemon';
 import { PokemonRepository } from '@/@core/domains/repositories/pokemon.repository';
 import { BaseResponse } from '@/@core/domains/types/base.type';
 import { HttpService } from '../services/http.service';
-import { PokemonListResponseDTO } from '@/@core/domains/types/pokemon.type';
+import { PokemonDetailResponseDTO, PokemonListResponseDTO } from '@/@core/domains/types/pokemon.type';
 
 export class PokemonRepositoryImpl implements PokemonRepository {
   constructor(private http: HttpService) {}
-  async getAll(): Promise<BaseResponse<Pokemon[]>> {
-    const response = await this.http.get<PokemonListResponseDTO>('/pokemon');
+
+  async getAll(params?: any): Promise<BaseResponse<Pokemon[]>> {
+    const response = await this.http.get<PokemonListResponseDTO>('/pokemon', { params });
+    const pokemons = response.results.map(Pokemon.fromApi);
+
+    await Promise.all(
+      pokemons.map(async (pokemon) => {
+        const detailResponse = await this.getDetail({ id: Number(pokemon.id) });
+        if (detailResponse.data) {
+          pokemon.updateDetail(detailResponse.data);
+        }
+      }),
+    );
+
     return {
-      data: response.results.map(Pokemon.fromApi),
+      data: pokemons,
+      meta: {
+        limit: 20,
+        total_items: response.count,
+        page: 1,
+        total_pages: 100,
+      },
     };
+  }
+
+  async getDetail(params?: any): Promise<BaseResponse<Pokemon>> {
+    const { id = 1 } = params;
+    const response = await this.http.get<PokemonDetailResponseDTO>(`/pokemon/${id}`);
+    const pokemon = Pokemon.fromApiDetail(response);
+    return { data: pokemon };
   }
 }

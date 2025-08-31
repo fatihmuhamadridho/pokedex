@@ -1,3 +1,4 @@
+import { Pokemon } from '@/@core/domains/models/pokemon';
 import ModalDetailPokemon from '@/components/organisms/Modals/DetailPokemon';
 import { usePokemons } from '@/hooks/pokemon.hook';
 import { Center, Flex, Paper, SimpleGrid, Text, UnstyledButton } from '@mantine/core';
@@ -5,14 +6,18 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLeaf, IconPokeball, IconTriangleFilled } from '@tabler/icons-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 
 const PokemonList = () => {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure();
   const { data: pokemonData } = usePokemons();
+  const [selectedDetail, setSelectedDetail] = useState<Pokemon>(Pokemon.DummyData());
 
-  const handleOpenDetail = () => {
+  console.log({ pokemonData });
+
+  const handleOpenDetail = (data: Pokemon) => {
+    setSelectedDetail(data);
     router.push('?pokemonid=1', undefined, { scroll: false });
     open();
   };
@@ -20,23 +25,17 @@ const PokemonList = () => {
   const handleCloseDetail = () => {
     router.push('/', undefined, { scroll: false });
     close();
+    setTimeout(() => {
+      setSelectedDetail(Pokemon.DummyData());
+    }, 300);
   };
 
   return (
     <Flex w={'100%'} direction={'column'} gap={36}>
-      <Flex
-        // className="sticky top-0 z-20"
-        // mt={-24}
-        // pt={24}
-        // pb={24}
-        w={'100%'}
-        align={'start'}
-        justify={'space-between'}
-        bg={'#EFF3F6'}
-      >
+      <Flex w={'100%'} align={'start'} justify={'space-between'} bg={'#EFF3F6'}>
         <Flex align={'center'} gap={18}>
           <IconPokeball />
-          <Text>150 Pokémons</Text>
+          <Text>{pokemonData?.meta?.total_items} Pokémons</Text>
         </Flex>
         <Flex align={'center'} gap={16}>
           <Flex direction={'column'} align={'center'} gap={3}>
@@ -61,18 +60,16 @@ const PokemonList = () => {
             px={28}
             bg={'white'}
             radius={12}
-            onClick={handleOpenDetail}
+            onClick={() => handleOpenDetail(item)}
           >
             <Flex w={'100%'} h={'100%'} direction={'column'} align={'center'} justify={'space-between'} gap={14}>
               <Center h={'100%'}>
                 <Paper w={165} h={165} bg={'#D6EBDC'} radius={'100%'} />
                 <Image
                   className="absolute z-10"
-                  src={
-                    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/16.svg'
-                  }
+                  src={item.image}
                   style={{ width: 200, height: 200 }}
-                  alt="pokemon"
+                  alt={`pokemon-${item.name}`}
                   width={200}
                   height={200}
                 />
@@ -80,7 +77,7 @@ const PokemonList = () => {
               <Flex w={'100%'} align={'center'} justify={'space-between'}>
                 <Flex direction={'column'}>
                   <Text fz={13} fw={500} c={'#7A7D80'} lh={'150%'} lts={'0%'}>
-                    #{item.id}
+                    #{item.id.padStart(3, '0')}
                   </Text>
                   <Text fz={18} fw={600} c={'#2F3133'} lh={'150%'} lts={'0%'} tt={'capitalize'}>
                     {item.name}
@@ -97,7 +94,7 @@ const PokemonList = () => {
           Load more Pokémon
         </UnstyledButton>
       </Center>
-      <ModalDetailPokemon opened={opened} onClose={handleCloseDetail} />
+      <ModalDetailPokemon opened={opened} onClose={handleCloseDetail} data={selectedDetail! || Pokemon.DummyData()} />
     </Flex>
   );
 };
