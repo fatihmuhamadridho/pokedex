@@ -1,6 +1,7 @@
-import { Pokemon } from '@/@core/domains/models/pokemon';
+import { Pokemon } from '@/@core/domains/models/pokemon.model';
+import { PokemonType } from '@/@core/domains/models/pokemonType.model';
+import { BaseResponse } from '@/@core/domains/types/base.type';
 import ModalDetailPokemon from '@/components/organisms/Modals/DetailPokemon';
-import { usePokemons } from '@/hooks/pokemon.hook';
 import { Center, Flex, Paper, SimpleGrid, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLeaf, IconPokeball, IconTriangleFilled } from '@tabler/icons-react';
@@ -8,15 +9,20 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-const PokemonList = () => {
+interface PokemonListProps {
+  pokemonsData?: Pokemon[];
+  pokemonsMeta?: BaseResponse['meta'];
+  pokemonTypesData?: PokemonType[];
+}
+
+const PokemonList = (props: PokemonListProps) => {
+  const { pokemonsData, pokemonsMeta, pokemonTypesData } = props;
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure();
-  const { data: pokemonData } = usePokemons();
   const [selectedDetail, setSelectedDetail] = useState<Pokemon>(Pokemon.DummyData());
 
-  console.log({ pokemonData });
-
   const handleOpenDetail = (data: Pokemon) => {
+    data.updateWeaknessFromPokemonType(data, pokemonTypesData || []);
     setSelectedDetail(data);
     router.push('?pokemonid=1', undefined, { scroll: false });
     open();
@@ -35,7 +41,7 @@ const PokemonList = () => {
       <Flex w={'100%'} align={'start'} justify={'space-between'} bg={'#EFF3F6'}>
         <Flex align={'center'} gap={18}>
           <IconPokeball />
-          <Text>{pokemonData?.meta?.total_items} Pokémons</Text>
+          <Text>{pokemonsMeta?.total_items} Pokémons</Text>
         </Flex>
         <Flex align={'center'} gap={16}>
           <Flex direction={'column'} align={'center'} gap={3}>
@@ -45,12 +51,8 @@ const PokemonList = () => {
           <Text>Urutkan berdasarkan</Text>
         </Flex>
       </Flex>
-      <SimpleGrid
-        // className="sticky top-[100px]"
-        cols={3}
-        spacing={32}
-      >
-        {pokemonData?.data?.map((item, index) => (
+      <SimpleGrid cols={3} spacing={32}>
+        {pokemonsData?.map((item, index) => (
           <Paper
             key={index}
             className="cursor-pointer"

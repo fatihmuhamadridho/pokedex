@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pokemon } from '../models/pokemon';
+import { Pokemon } from '../models/pokemon.model';
 import { BaseResponse } from '../types/base.type';
 
 export interface PokemonRepository {

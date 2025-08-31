@@ -1,4 +1,4 @@
-import { Pokemon } from '@/@core/domains/models/pokemon';
+import { Pokemon } from '@/@core/domains/models/pokemon.model';
 import BannerDetailImage from '@/components/atoms/BannerDetailImage';
 import { Box, Flex, Modal, Paper, Progress, Text, UnstyledButton } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
@@ -24,17 +24,19 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
 
   function renderSegments(value: number, max = 100, segments = 5) {
     const percent = (value / max) * 100;
-    const activeSegments = Math.round((percent / 100) * segments);
+    const filled = (percent / 100) * segments;
 
-    return Array.from({ length: segments }).map((_, i) => (
-      <Progress
-        key={i}
-        w="20%"
-        h={6}
-        value={i < activeSegments ? 100 : 0}
-        color={i < activeSegments ? 'blue' : 'gray'}
-      />
-    ));
+    return Array.from({ length: segments }).map((_, i) => {
+      let segmentValue = 0;
+
+      if (i + 1 <= Math.floor(filled)) {
+        segmentValue = 100;
+      } else if (i < filled && filled < i + 1) {
+        segmentValue = (filled - i) * 100;
+      }
+
+      return <Progress key={i} w="20%" h={6} value={segmentValue} color={segmentValue > 0 ? '#EF0001' : '#EFF3F6'} />;
+    });
   }
 
   return (
@@ -137,8 +139,9 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
                   fw={600}
                   lh={'100%'}
                   lts={'-1%'}
+                  tt={'capitalize'}
                 >
-                  Fogo
+                  {item}
                 </Paper>
               ))}
             </Flex>

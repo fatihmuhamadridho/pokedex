@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pokemon } from '@/@core/domains/models/pokemon';
+import { Pokemon } from '@/@core/domains/models/pokemon.model';
 import { PokemonRepository } from '@/@core/domains/repositories/pokemon.repository';
 import { BaseResponse } from '@/@core/domains/types/base.type';
 import { HttpService } from '../services/http.service';
 import { PokemonDetailResponseDTO, PokemonListResponseDTO } from '@/@core/domains/types/pokemon.type';
 
 export class PokemonRepositoryImpl implements PokemonRepository {
-  constructor(private http: HttpService) {}
+  constructor(private httpService: HttpService) {}
 
   async getAll(params?: any): Promise<BaseResponse<Pokemon[]>> {
-    const response = await this.http.get<PokemonListResponseDTO>('/pokemon', { params });
+    const response = await this.httpService.get<PokemonListResponseDTO>('/pokemon', { params });
     const pokemons = response.results.map(Pokemon.fromApi);
 
     await Promise.all(
@@ -34,7 +34,7 @@ export class PokemonRepositoryImpl implements PokemonRepository {
 
   async getDetail(params?: any): Promise<BaseResponse<Pokemon>> {
     const { id = 1 } = params;
-    const response = await this.http.get<PokemonDetailResponseDTO>(`/pokemon/${id}`);
+    const response = await this.httpService.get<PokemonDetailResponseDTO>(`/pokemon/${id}`);
     const pokemon = Pokemon.fromApiDetail(response);
     return { data: pokemon };
   }

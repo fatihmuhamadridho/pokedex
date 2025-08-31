@@ -1,4 +1,5 @@
 import { PokemonDetailResponseDTO, PokemonListItemDTO } from '../types/pokemon.type';
+import { PokemonType } from './pokemonType.model';
 
 export class Pokemon {
   constructor(
@@ -29,6 +30,11 @@ export class Pokemon {
     this.weakness = data.weakness;
     this.statistics = data.statistics;
     this.image = data.image;
+  }
+
+  updateWeaknessFromPokemonType(pokemonData: Pokemon, pokemonTypeData: PokemonType[]) {
+    const weakness = pokemonTypeData.find((item) => item.name === pokemonData.type[0])?.weakness;
+    this.weakness = weakness?.filter((item, index) => index < 4) || [];
   }
 
   static fromApi(data: PokemonListItemDTO): Pokemon {
