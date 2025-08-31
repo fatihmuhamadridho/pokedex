@@ -1,5 +1,6 @@
 import BannerDetailImage from '@/components/atoms/BannerDetailImage';
-import { Box, Flex, Modal, Paper, Progress, Text } from '@mantine/core';
+import { Box, Flex, Modal, Paper, Progress, Text, UnstyledButton } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 import Image from 'next/image';
 import React from 'react';
 
@@ -23,6 +24,9 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
       centered
       radius={16}
     >
+      <UnstyledButton className="absolute top-[16px] right-[16px] z-10" onClick={onClose}>
+        <IconX size={24} />
+      </UnstyledButton>
       <Flex h={'100%'} align={'start'} gap={74}>
         <Box className="relative">
           <BannerDetailImage width={191} height={508} />
