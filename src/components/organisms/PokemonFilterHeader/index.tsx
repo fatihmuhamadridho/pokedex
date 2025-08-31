@@ -2,16 +2,16 @@ import { Flex, Paper, Text, TextInput } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import React from 'react';
 
-interface PokemonFilterHeaderProps {
-  // ga kepake kayakyna
-  className?: string;
-}
-
-const PokemonFilterHeader = (props: PokemonFilterHeaderProps) => {
-  const { className } = props;
+const PokemonFilterHeader = () => {
   return (
-    <Flex w={'100%'} pt={150} pb={82} bg={'#EFF3F6'} justify={'center'}>
-      <Flex className={className} w={'100%'} maw={1235} align={'center'} justify={'space-between'}>
+    <Flex
+      w={'100%'}
+      pt={150}
+      pb={82}
+      bg="linear-gradient(to bottom, rgba(239,243,246,0) 0%, #EFF3F6 100%)"
+      justify={'center'}
+    >
+      <Flex w={'100%'} maw={1235} align={'center'} justify={'space-between'}>
         <Text maw={265} fz={32} fw={'bold'} c={'#2F3133'} lts={'-1%'} lh={'100%'}>
           Pilih Pokemon Anda
         </Text>

@@ -1,14 +1,16 @@
+import clsx from 'clsx';
 import React from 'react';
 
 interface LogoProps {
+  className?: string;
   onClick?: () => void;
 }
 
 const Logo = (props: LogoProps) => {
-  const { onClick } = props;
+  const { className, onClick } = props;
   return (
     <svg
-      className="cursor-pointer"
+      className={clsx('cursor-pointer', className)}
       width="159"
       height="59"
       viewBox="0 0 159 59"

@@ -6,11 +6,13 @@ import PokeballImage from '@/components/atoms/PokeballImage';
 import { Box } from '@mantine/core';
 import ButtonExplore from '@/components/molecules/ButtonExplore';
 import BannerTopContent from '@/components/molecules/BannerTopContent';
+import Logo from '@/components/atoms/Logo';
 
 const Banner = () => {
   const autoplay = useRef(Autoplay({ delay: 3000 }));
   return (
     <Box>
+      <Logo className="absolute top-[2vw] left-[8vw] z-10" />
       <ButtonExplore />
       <Carousel
         className="absolute"
