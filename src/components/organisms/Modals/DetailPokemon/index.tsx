@@ -69,7 +69,7 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
           <Flex mt={32} align={'center'} gap={48}>
             <Flex direction={'column'} gap={4}>
               <Text fz={13} fw={400} lh={'100%'} lts={'-1%'}>
-                Alutra
+                Tinggi
               </Text>
               <Text fz={14} fw={600} lh={'100%'} lts={'-1%'}>
                 0.7m
@@ -77,24 +77,24 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
             </Flex>
             <Flex direction={'column'} gap={4}>
               <Text fz={13} fw={400} lh={'100%'} lts={'-1%'}>
-                Alutra
+                Berat
               </Text>
               <Text fz={14} fw={600} lh={'100%'} lts={'-1%'}>
-                0.7m
+                13.0kg
               </Text>
             </Flex>
             <Flex direction={'column'} gap={4}>
               <Text fz={13} fw={400} lh={'100%'} lts={'-1%'}>
-                Habilidades
+                Keterampilan
               </Text>
               <Text fz={14} fw={600} lh={'100%'} lts={'-1%'}>
-                0.7m
+                Crescer demais
               </Text>
             </Flex>
           </Flex>
           <Flex mt={32} direction={'column'} gap={16}>
             <Text fz={13} fw={600} lh={'100%'} lts={'-1%'}>
-              Fraquezas
+              Kelemahan
             </Text>
             <Flex align={'center'} wrap={'wrap'} gap={10}>
               {Array.from({ length: 4 }).map((item, index) => (
@@ -116,23 +116,81 @@ const ModalDetailPokemon = (props: ModalDetailPokemonProps) => {
           </Flex>
           <Flex w={'100%'} mt={32} direction={'column'} gap={16}>
             <Text fz={13} fw={600} lh={'100%'} lts={'-1%'}>
-              Fraquezas
+              Statistik
             </Text>
             <Flex direction="column" gap={12} w="100%">
-              {['Sp. ataque', 'Sp. defesa', 'Sp. defesa', 'Sp. defesa', 'Sp. defesa', 'Sp. defesa'].map((label, i) => (
-                <Flex key={i} align="center" gap={12} w="100%">
-                  <Text fz={12} fw={400} c="#7A7D80" w={80}>
-                    {label}
-                  </Text>
-                  <Flex w="100%" gap={4}>
-                    <Progress w="20%" h={3} value={100} />
-                    <Progress w="20%" h={3} value={80} />
-                    <Progress w="20%" h={3} value={60} />
-                    <Progress w="20%" h={3} value={40} />
-                    <Progress w="20%" h={3} value={20} />
-                  </Flex>
+              <Flex align="center" gap={12} w="100%">
+                <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                  HP
+                </Text>
+                <Flex w="100%" gap={4}>
+                  <Progress w="20%" h={3} value={100} />
+                  <Progress w="20%" h={3} value={80} />
+                  <Progress w="20%" h={3} value={60} />
+                  <Progress w="20%" h={3} value={40} />
+                  <Progress w="20%" h={3} value={20} />
                 </Flex>
-              ))}
+              </Flex>
+              <Flex align="center" gap={12} w="100%">
+                <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                  Serangan
+                </Text>
+                <Flex w="100%" gap={4}>
+                  <Progress w="20%" h={3} value={100} />
+                  <Progress w="20%" h={3} value={80} />
+                  <Progress w="20%" h={3} value={60} />
+                  <Progress w="20%" h={3} value={40} />
+                  <Progress w="20%" h={3} value={20} />
+                </Flex>
+              </Flex>
+              <Flex align="center" gap={12} w="100%">
+                <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                  Pertahanan
+                </Text>
+                <Flex w="100%" gap={4}>
+                  <Progress w="20%" h={3} value={100} />
+                  <Progress w="20%" h={3} value={80} />
+                  <Progress w="20%" h={3} value={60} />
+                  <Progress w="20%" h={3} value={40} />
+                  <Progress w="20%" h={3} value={20} />
+                </Flex>
+              </Flex>
+              <Flex align="center" gap={12} w="100%">
+                <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                  Sp. Serangan
+                </Text>
+                <Flex w="100%" gap={4}>
+                  <Progress w="20%" h={3} value={100} />
+                  <Progress w="20%" h={3} value={80} />
+                  <Progress w="20%" h={3} value={60} />
+                  <Progress w="20%" h={3} value={40} />
+                  <Progress w="20%" h={3} value={20} />
+                </Flex>
+              </Flex>
+              <Flex align="center" gap={12} w="100%">
+                <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                  Sp. Pertahanan
+                </Text>
+                <Flex w="100%" gap={4}>
+                  <Progress w="20%" h={3} value={100} />
+                  <Progress w="20%" h={3} value={80} />
+                  <Progress w="20%" h={3} value={60} />
+                  <Progress w="20%" h={3} value={40} />
+                  <Progress w="20%" h={3} value={20} />
+                </Flex>
+              </Flex>
+              <Flex align="center" gap={12} w="100%">
+                <Text fz={12} fw={400} c="#7A7D80" w={120}>
+                  Kecepatan
+                </Text>
+                <Flex w="100%" gap={4}>
+                  <Progress w="20%" h={3} value={100} />
+                  <Progress w="20%" h={3} value={80} />
+                  <Progress w="20%" h={3} value={60} />
+                  <Progress w="20%" h={3} value={40} />
+                  <Progress w="20%" h={3} value={20} />
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
