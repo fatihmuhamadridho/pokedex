@@ -1,9 +1,25 @@
+import ModalDetailPokemon from '@/components/organisms/Modals/DetailPokemon';
 import { Center, Flex, Paper, SimpleGrid, Text, UnstyledButton } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconLeaf, IconPokeball, IconTriangleFilled } from '@tabler/icons-react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const PokemonList = () => {
+  const router = useRouter();
+  const [opened, { open, close }] = useDisclosure();
+
+  const handleOpenDetail = () => {
+    router.push('?pokemonid=1', undefined, { scroll: false });
+    open();
+  };
+
+  const handleCloseDetail = () => {
+    router.push('/', undefined, { scroll: false });
+    close();
+  };
+
   return (
     <Flex w={'100%'} direction={'column'} gap={36}>
       <Flex
@@ -34,7 +50,17 @@ const PokemonList = () => {
         spacing={32}
       >
         {Array.from({ length: 20 }).map((item, index) => (
-          <Paper key={index} className="cursor-pointer" w={280} h={304} py={24} px={28} bg={'white'} radius={12}>
+          <Paper
+            key={index}
+            className="cursor-pointer"
+            w={280}
+            h={304}
+            py={24}
+            px={28}
+            bg={'white'}
+            radius={12}
+            onClick={handleOpenDetail}
+          >
             <Flex w={'100%'} h={'100%'} direction={'column'} align={'center'} justify={'space-between'} gap={14}>
               <Center h={'100%'}>
                 <Paper w={165} h={165} bg={'#D6EBDC'} radius={'100%'} />
@@ -69,6 +95,7 @@ const PokemonList = () => {
           Load more Pokémon
         </UnstyledButton>
       </Center>
+      <ModalDetailPokemon opened={opened} onClose={handleCloseDetail} />
     </Flex>
   );
 };

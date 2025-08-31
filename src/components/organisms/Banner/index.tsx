@@ -19,7 +19,7 @@ const Banner = () => {
         height={'70vw'}
         emblaOptions={{ loop: true }}
         plugins={[autoplay.current]}
-        onMouseEnter={autoplay.current.stop}
+        onMouseEnter={() => autoplay.current.play()}
         onMouseLeave={() => autoplay.current.play()}
         withIndicators={false}
         withControls={false}
