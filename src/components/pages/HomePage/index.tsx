@@ -15,9 +15,11 @@ import { useRouter } from 'next/router';
 import { notifications } from '@mantine/notifications';
 import { PokemonTypeValue } from '@/@core/domains/types/pokemonType.type';
 import { Meta } from '@/@core/domains/types/base.type';
+import { useQueryClient } from '@tanstack/react-query';
 
 const HomePage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState<string | number>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [detailPokemon, setDetailPokemon] = useState<Pokemon | null | undefined>();
@@ -92,6 +94,7 @@ const HomePage = () => {
     router.push({ pathname: '/', query }, undefined, { scroll: false });
     setListPokemonByFilterType(undefined);
     handleResetMeta();
+    queryClient.removeQueries({ queryKey: ['pokemons'] });
   };
 
   const handleGetDetailType = useDebouncedCallback(async (value: string) => {
