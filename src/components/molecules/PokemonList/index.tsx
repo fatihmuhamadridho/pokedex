@@ -47,13 +47,13 @@ const PokemonList = (props: PokemonListProps) => {
           <IconPokeball />
           <Text>{pokemonsMeta?.total_items} Pokémons</Text>
         </Flex>
-        <Flex align={'center'} gap={16}>
+        {/* <Flex align={'center'} gap={16}>
           <Flex direction={'column'} align={'center'} gap={3}>
             <IconTriangleFilled className="cursor-pointer" size={10} />
             <IconTriangleFilled className="rotate-180 cursor-pointer" size={10} />
           </Flex>
           <Text>Urutkan berdasarkan</Text>
-        </Flex>
+        </Flex> */}
       </Flex>
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={32}>
         {pokemonsData?.map((item, index) => {

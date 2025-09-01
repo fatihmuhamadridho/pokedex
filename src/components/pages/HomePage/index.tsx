@@ -64,6 +64,9 @@ const HomePage = () => {
   };
 
   const handleGetDetailBySearch = useDebouncedCallback(async (value?: string) => {
+    if (router.query.type) {
+      handleResetFilterType();
+    }
     setIsLoading(true);
     try {
       if (value) {

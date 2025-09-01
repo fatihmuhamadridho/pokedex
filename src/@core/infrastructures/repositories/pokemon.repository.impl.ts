@@ -104,7 +104,7 @@ export class PokemonRepositoryImpl implements PokemonRepository {
       const queryParams = Pokemon.toQueryParams(props.params || { page: 1, limit: 10 });
 
       const start = queryParams.offset!;
-      const end = start + queryParams.limit!;
+      const end = 1 + start + queryParams.limit!;
 
       await Promise.all(
         props.data.slice(start, end).map(async (pokemon) => {
