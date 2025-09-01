@@ -1,4 +1,5 @@
 import { PokemonDetailResponseDTO, PokemonListItemDTO } from '../types/pokemon.type';
+import { PokemonTypeDetailPokemonItemDTO } from '../types/pokemonType.type';
 import { PokemonType } from './pokemonType.model';
 
 export class Pokemon {
@@ -88,6 +89,28 @@ export class Pokemon {
       [],
       statistics,
       data.sprites.other.dream_world.front_default || data.sprites.other['official-artwork'].front_default,
+    );
+  }
+
+  static fromApiPokemonTypeDetail(data: PokemonTypeDetailPokemonItemDTO): Pokemon {
+    const rawId = data.pokemon.url.split('/')[6];
+    return new Pokemon(
+      rawId,
+      data.pokemon.url,
+      [],
+      0,
+      0,
+      '',
+      [],
+      {
+        health_power: 0,
+        attack: 0,
+        defense: 0,
+        sp_attack: 0,
+        sp_defense: 0,
+        speed: 0,
+      },
+      '',
     );
   }
 

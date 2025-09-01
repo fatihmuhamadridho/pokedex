@@ -1,4 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export type PokemonTypeValue =
+  | 'normal'
+  | 'fighting'
+  | 'flying'
+  | 'poison'
+  | 'ground'
+  | 'rock'
+  | 'bug'
+  | 'ghost'
+  | 'steel'
+  | 'fire'
+  | 'water'
+  | 'grass'
+  | 'electric'
+  | 'psychic'
+  | 'ice'
+  | 'dragon'
+  | 'dark'
+  | 'fairy'
+  | 'stellar'
+  | 'unknown';
+
+export type PokemonTypeDetailQueryParams = {
+  type?: string;
+};
+
 export interface PokemonTypeListResponseDTO {
   count: number;
   next: string;

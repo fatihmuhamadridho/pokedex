@@ -18,3 +18,10 @@ export class GetDetailPokemonUseCase implements BaseUseCase<PokemonDetailQueryPa
     return this.pokemonRepository.getDetail({ search: search });
   }
 }
+
+export class GetAllPokemonByFilterTypeUseCase implements BaseUseCase<any, BaseResponse<Pokemon[]>> {
+  constructor(private pokemonRepository: PokemonRepository) {}
+  execute(params?: any): Promise<BaseResponse<Pokemon[]>> {
+    return this.pokemonRepository.getAllPokemonByFilterType(params);
+  }
+}

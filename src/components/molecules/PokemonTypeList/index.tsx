@@ -1,4 +1,5 @@
 import { PokemonType } from '@/@core/domains/models/pokemonType.model';
+import { PokemonTypeValue } from '@/@core/domains/types/pokemonType.type';
 import { Flex, Text } from '@mantine/core';
 import { IconPokeball } from '@tabler/icons-react';
 import clsx from 'clsx';
@@ -6,10 +7,17 @@ import React from 'react';
 
 interface PokemonTypeListProps {
   pokemonTypesData?: PokemonType[];
+  onChangeFilterType?: (value?: 'all' | PokemonTypeValue | number) => void;
 }
 
 const PokemonTypeList = (props: PokemonTypeListProps) => {
-  const { pokemonTypesData } = props;
+  const { onChangeFilterType, pokemonTypesData } = props;
+  const handleChangeFilterType = (item?: 'all' | PokemonTypeValue | number) => {
+    if (onChangeFilterType) {
+      onChangeFilterType(item! || 'all');
+    }
+  };
+
   return (
     <Flex
       className="sticky top-[36px] min-w-max max-h-[calc(100vh-72px)] overflow-y-auto"
@@ -23,6 +31,7 @@ const PokemonTypeList = (props: PokemonTypeListProps) => {
           className={clsx(index !== 0 ? 'ml-2 cursor-pointer' : 'cursor-pointer')}
           align={'center'}
           gap={24}
+          onClick={() => handleChangeFilterType((String(item) as PokemonTypeValue) || 'all')}
         >
           <IconPokeball />
           <Text fz={15} fw={600} lh={'150%'} lts={'0%'} c={'#ACB9C1'} tt={'capitalize'}>

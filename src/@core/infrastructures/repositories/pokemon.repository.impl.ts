@@ -9,6 +9,8 @@ import {
   PokemonListResponseDTO,
 } from '@/@core/domains/types/pokemon.type';
 import { AxiosError } from 'axios';
+import { PokemonTypeRepositoryImpl } from './pokemonType.repository.impl';
+import { PokemonTypeDetailQueryParams } from '@/@core/domains/types/pokemonType.type';
 
 export class PokemonRepositoryImpl implements PokemonRepository {
   constructor(private httpService: HttpService) {}
@@ -58,6 +60,33 @@ export class PokemonRepositoryImpl implements PokemonRepository {
         status: {
           code: String(error.response?.status || 500),
           message: `No Pokémon found with search parameter "${params?.search}"`,
+        },
+      });
+    }
+  }
+
+  async getAllPokemonByFilterType(params?: PokemonTypeDetailQueryParams): Promise<BaseResponse<Pokemon[]>> {
+    try {
+      const pokemonTypeRepositoryImpl = new PokemonTypeRepositoryImpl(this.httpService);
+      const response = await pokemonTypeRepositoryImpl.getDetail(params);
+      const pokemons = response.data?.pokemons.filter((item, index) => index < 20) || [];
+
+      await Promise.all(
+        pokemons.map(async (pokemon) => {
+          const detailResponse = await this.getDetail({ search: Number(pokemon.id) });
+          if (detailResponse.data) {
+            pokemon.updateDetail(detailResponse.data);
+          }
+        }),
+      );
+
+      return { data: pokemons };
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      return Promise.reject({
+        status: {
+          code: String(error.response?.status || 500),
+          message: `Something went wrong`,
         },
       });
     }
