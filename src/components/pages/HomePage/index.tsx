@@ -24,12 +24,12 @@ const HomePage = () => {
   const [listPokemonByFilterType, setListPokemonByFilterType] = useState<Pokemon[] | null | undefined>();
   const [metaPokemonByFilterType, setMetaPokemonByFilterType] = useState<Meta | null | undefined>();
   const pokemonController = new PokemonController();
-  const { data: pokemonsData, fetchNextPage } = usePokemons(15);
+  const { data: pokemonsData, fetchNextPage, hasNextPage } = usePokemons(15);
   const { data: pokemonTypesData } = usePokemonTypes();
   const pokemons: Pokemon[] = pokemonsData?.pages.flatMap((page) => page.data!) ?? [];
   const meta = pokemonsData?.pages[pokemonsData.pages.length - 1]?.meta;
 
-  console.log({ listPokemonByFilterType });
+  console.log({ pokemonsData });
 
   useEffect(() => {
     if (pokemonTypesData?.data && pokemons) {
@@ -136,9 +136,10 @@ const HomePage = () => {
       <Box className="-mt-[21vw]">
         <PokemonFilterHeader search={String(search)} onChangeSearch={handleFilterSearch} loading={isLoading} />
         <PokemonCollection
-          search={String(search)}
+          showLoadMore={String(search) === '' && hasNextPage}
           onChangeFilterType={handleFilterType}
           pokemonsData={detailPokemon ? [detailPokemon] : listPokemonByFilterType ? listPokemonByFilterType : pokemons}
+          // pokemonsData={[]}
           pokemonsMeta={metaPokemonByFilterType || meta}
           pokemonTypesData={pokemonTypesData?.data || []}
           handleLoadMorePokemonData={fetchNextPage}

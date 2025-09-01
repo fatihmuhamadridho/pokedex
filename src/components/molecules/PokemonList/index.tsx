@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 interface PokemonListProps {
-  search?: string;
+  showLoadMore?: boolean;
   pokemonsData?: Pokemon[];
   pokemonsMeta?: BaseResponse['meta'];
   pokemonTypesData?: PokemonType[];
@@ -18,7 +18,7 @@ interface PokemonListProps {
 }
 
 const PokemonList = (props: PokemonListProps) => {
-  const { search, pokemonsData, pokemonsMeta, pokemonTypesData, handleLoadMorePokemonData } = props;
+  const { showLoadMore, pokemonsData, pokemonsMeta, pokemonTypesData, handleLoadMorePokemonData } = props;
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure();
   const [selectedDetail, setSelectedDetail] = useState<Pokemon>(Pokemon.DummyData());
@@ -103,7 +103,7 @@ const PokemonList = (props: PokemonListProps) => {
           return null;
         })}
       </SimpleGrid>
-      {!search && (
+      {showLoadMore && (
         <Center>
           <UnstyledButton
             className="!bg-[#3F5DB3]/[10%] rounded-[6px]"

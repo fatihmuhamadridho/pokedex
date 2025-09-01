@@ -8,7 +8,7 @@ import { Flex } from '@mantine/core';
 import React from 'react';
 
 interface PokemonCollectionProps {
-  search?: string;
+  showLoadMore?: boolean;
   onChangeFilterType?: (value?: 'all' | PokemonTypeValue | number) => void;
   pokemonsData?: Pokemon[];
   pokemonsMeta?: BaseResponse['meta'];
@@ -17,14 +17,15 @@ interface PokemonCollectionProps {
 }
 
 const PokemonCollection = (props: PokemonCollectionProps) => {
-  const { search, onChangeFilterType, pokemonsData, pokemonsMeta, pokemonTypesData, handleLoadMorePokemonData } = props;
+  const { showLoadMore, onChangeFilterType, pokemonsData, pokemonsMeta, pokemonTypesData, handleLoadMorePokemonData } =
+    props;
 
   return (
     <Flex w={'100%'} py={48} px={16} bg={'#EFF3F6'} justify={'center'}>
       <Flex w={'100%'} maw={1235} justify={'space-between'} gap={140}>
         <PokemonTypeList onChangeFilterType={onChangeFilterType} pokemonTypesData={pokemonTypesData} />
         <PokemonList
-          search={search}
+          showLoadMore={showLoadMore}
           pokemonsData={pokemonsData}
           pokemonsMeta={pokemonsMeta}
           pokemonTypesData={pokemonTypesData}
