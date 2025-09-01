@@ -1,8 +1,21 @@
 import { Flex, Paper, Text, TextInput } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
-const PokemonFilterHeader = () => {
+interface PokemonFilterHeaderProps {
+  search?: string;
+  onChangeSearch?: (value?: string) => void;
+}
+
+const PokemonFilterHeader = (props: PokemonFilterHeaderProps) => {
+  const { search, onChangeSearch } = props;
+
+  const handleChangeSearch = (event?: ChangeEvent<HTMLInputElement>) => {
+    if (onChangeSearch) {
+      onChangeSearch(event?.target.value);
+    }
+  };
+
   return (
     <Flex
       w={'100%'}
@@ -29,6 +42,8 @@ const PokemonFilterHeader = () => {
             </Paper>
           }
           placeholder="Cari berdasarkan nama atau kode"
+          onChange={handleChangeSearch}
+          value={search}
         />
       </Flex>
     </Flex>

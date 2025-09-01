@@ -18,7 +18,7 @@ export class PokemonType {
   }
 
   static fromApiDetail(data: PokemonTypeDetailResponseDTO): PokemonType {
-    const weakness = data.damage_relations.double_damage_from.map((item) => item.name);
+    const weakness = data.damage_relations.double_damage_from.map((item) => item.name).reverse();
     return new PokemonType(String(data.id), data.name, weakness);
   }
 

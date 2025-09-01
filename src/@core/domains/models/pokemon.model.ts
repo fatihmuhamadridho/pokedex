@@ -32,8 +32,8 @@ export class Pokemon {
     this.image = data.image;
   }
 
-  updateWeaknessFromPokemonType(pokemonData: Pokemon, pokemonTypeData: PokemonType[]) {
-    const weakness = pokemonTypeData.find((item) => item.name === pokemonData.type[0])?.weakness;
+  updateWeaknessFromPokemonType(pokemonTypeData: PokemonType[]) {
+    const weakness = pokemonTypeData.find((item) => item.name === this.type[0])?.weakness;
     this.weakness = weakness?.filter((item, index) => index < 4) || [];
   }
 
@@ -87,7 +87,7 @@ export class Pokemon {
       skill,
       [],
       statistics,
-      data.sprites.other.dream_world.front_default,
+      data.sprites.other.dream_world.front_default || data.sprites.other['official-artwork'].front_default,
     );
   }
 

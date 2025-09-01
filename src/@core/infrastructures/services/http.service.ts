@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { BASE_API_URL_V2 } from '@/configs/base.config';
 
 export class HttpService {
@@ -11,19 +11,28 @@ export class HttpService {
     });
   }
 
-  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.client.get(url, config).then((res) => res.data);
+  private async handleRequest<T>(promise: Promise<any>): Promise<T & AxiosError> {
+    try {
+      const res = await promise;
+      return res.data as T & AxiosError;
+    } catch (error: any) {
+      throw error as AxiosError;
+    }
   }
 
-  post<T = any>(url: string, data: any): Promise<T> {
-    return this.client.post(url, data).then((res) => res.data);
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T & AxiosError> {
+    return this.handleRequest<T>(this.client.get(url, config));
   }
 
-  put<T = any>(url: string, data: any): Promise<T> {
-    return this.client.put(url, data).then((res) => res.data);
+  post<T = any>(url: string, data: any): Promise<T & AxiosError> {
+    return this.handleRequest<T>(this.client.post(url, data));
   }
 
-  delete<T = any>(url: string): Promise<T> {
-    return this.client.delete(url).then((res) => res.data);
+  put<T = any>(url: string, data: any): Promise<T & AxiosError> {
+    return this.handleRequest<T>(this.client.put(url, data));
+  }
+
+  delete<T = any>(url: string): Promise<T & AxiosError> {
+    return this.handleRequest<T>(this.client.delete(url));
   }
 }

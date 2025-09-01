@@ -2,7 +2,7 @@ import { Pokemon } from '@/@core/domains/models/pokemon.model';
 import { PokemonType } from '@/@core/domains/models/pokemonType.model';
 import { BaseResponse } from '@/@core/domains/types/base.type';
 import ModalDetailPokemon from '@/components/organisms/Modals/DetailPokemon';
-import { Center, Flex, Paper, SimpleGrid, Text, UnstyledButton } from '@mantine/core';
+import { Box, Center, Flex, Paper, SimpleGrid, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLeaf, IconPokeball, IconTriangleFilled } from '@tabler/icons-react';
 import Image from 'next/image';
@@ -22,9 +22,11 @@ const PokemonList = (props: PokemonListProps) => {
   const [selectedDetail, setSelectedDetail] = useState<Pokemon>(Pokemon.DummyData());
 
   const handleOpenDetail = (data: Pokemon) => {
-    data.updateWeaknessFromPokemonType(data, pokemonTypesData || []);
+    if (data.weakness.length === 0) {
+      data.updateWeaknessFromPokemonType(pokemonTypesData || []);
+    }
     setSelectedDetail(data);
-    router.push('?pokemonid=1', undefined, { scroll: false });
+    router.push(`?pokemonid=${data.id}`, undefined, { scroll: false });
     open();
   };
 
@@ -67,14 +69,17 @@ const PokemonList = (props: PokemonListProps) => {
             <Flex w={'100%'} h={'100%'} direction={'column'} align={'center'} justify={'space-between'} gap={14}>
               <Center h={'100%'}>
                 <Paper w={165} h={165} bg={'#D6EBDC'} radius={'100%'} />
-                <Image
-                  className="absolute z-10"
-                  src={item.image}
-                  style={{ width: 200, height: 200 }}
-                  alt={`pokemon-${item.name}`}
-                  width={200}
-                  height={200}
-                />
+                <Box className="absolute z-10" style={{ width: 200, height: 200 }}>
+                  <Image
+                    src={item.image || '/assets/pokeball.png'}
+                    alt={`pokemon-${item.name}`}
+                    fill
+                    sizes="200px"
+                    style={{ objectFit: 'contain' }}
+                    placeholder="blur"
+                    blurDataURL="/assets/pokeball.png"
+                  />
+                </Box>
               </Center>
               <Flex w={'100%'} align={'center'} justify={'space-between'}>
                 <Flex direction={'column'}>

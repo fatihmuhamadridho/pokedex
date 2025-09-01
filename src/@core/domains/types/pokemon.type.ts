@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export type PokemonDetailQueryParams = {
+  search?: string | number;
+};
+
 export type PokemonListResponseDTO = {
   count: number;
   next?: string;
