@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Banner from '../../organisms/Banner';
 import Layout from '../../layouts/Layout';
@@ -10,12 +11,14 @@ import { useDebouncedCallback } from '@mantine/hooks';
 import { PokemonController } from '@/@core/domains/controllers/pokemon.controller';
 import { Pokemon } from '@/@core/domains/models/pokemon.model';
 import { useRouter } from 'next/router';
+import { notifications } from '@mantine/notifications';
 
 const HomePage = () => {
   const router = useRouter();
   const { data: pokemonsData } = usePokemons();
   const { data: pokemonTypesData } = usePokemonTypes();
   const [search, setSearch] = useState<string | number>('');
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [detailPokemon, setDetailPokemon] = useState<Pokemon | null | undefined>();
   const pokemonController = new PokemonController();
 
@@ -40,6 +43,7 @@ const HomePage = () => {
   };
 
   const handleGetDetailBySearch = useDebouncedCallback(async (value?: string) => {
+    setSearchLoading(true);
     try {
       if (value) {
         const response = await pokemonController.getDetailPokemon({ search: value });
@@ -48,8 +52,10 @@ const HomePage = () => {
       } else {
         setDetailPokemon(undefined);
       }
-    } catch (error) {
-      console.log({ error });
+    } catch (error: any) {
+      notifications.show({ title: 'Failed Fetch', message: error?.status?.message, color: 'red' });
+    } finally {
+      setSearchLoading(false);
     }
   }, 1000);
 
@@ -57,8 +63,9 @@ const HomePage = () => {
     <Layout>
       <Banner />
       <Box className="-mt-[21vw]">
-        <PokemonFilterHeader search={String(search)} onChangeSearch={handleFilterSearch} />
+        <PokemonFilterHeader search={String(search)} onChangeSearch={handleFilterSearch} loading={searchLoading} />
         <PokemonCollection
+          search={String(search)}
           pokemonsData={detailPokemon ? [detailPokemon] : pokemonsData?.data || []}
           pokemonsMeta={pokemonsData?.meta}
           pokemonTypesData={pokemonTypesData?.data || []}

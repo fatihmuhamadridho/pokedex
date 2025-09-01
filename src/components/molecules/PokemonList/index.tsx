@@ -10,13 +10,14 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 interface PokemonListProps {
+  search?: string;
   pokemonsData?: Pokemon[];
   pokemonsMeta?: BaseResponse['meta'];
   pokemonTypesData?: PokemonType[];
 }
 
 const PokemonList = (props: PokemonListProps) => {
-  const { pokemonsData, pokemonsMeta, pokemonTypesData } = props;
+  const { search, pokemonsData, pokemonsMeta, pokemonTypesData } = props;
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure();
   const [selectedDetail, setSelectedDetail] = useState<Pokemon>(Pokemon.DummyData());
@@ -53,7 +54,7 @@ const PokemonList = (props: PokemonListProps) => {
           <Text>Urutkan berdasarkan</Text>
         </Flex>
       </Flex>
-      <SimpleGrid cols={3} spacing={32}>
+      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={32}>
         {pokemonsData?.map((item, index) => (
           <Paper
             key={index}
@@ -96,11 +97,13 @@ const PokemonList = (props: PokemonListProps) => {
           </Paper>
         ))}
       </SimpleGrid>
-      <Center>
-        <UnstyledButton className="!bg-[#3F5DB3]/[10%] rounded-[6px]" py={14} px={20} c={'#3F5DB3'}>
-          Load more Pokémon
-        </UnstyledButton>
-      </Center>
+      {!search && (
+        <Center>
+          <UnstyledButton className="!bg-[#3F5DB3]/[10%] rounded-[6px]" py={14} px={20} c={'#3F5DB3'}>
+            Load more Pokémon
+          </UnstyledButton>
+        </Center>
+      )}
       <ModalDetailPokemon opened={opened} onClose={handleCloseDetail} data={selectedDetail! || Pokemon.DummyData()} />
     </Flex>
   );
