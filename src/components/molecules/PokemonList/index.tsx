@@ -55,47 +55,52 @@ const PokemonList = (props: PokemonListProps) => {
         </Flex>
       </Flex>
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={32}>
-        {pokemonsData?.map((item, index) => (
-          <Paper
-            key={index}
-            className="cursor-pointer"
-            w={280}
-            h={304}
-            py={24}
-            px={28}
-            bg={'white'}
-            radius={12}
-            onClick={() => handleOpenDetail(item)}
-          >
-            <Flex w={'100%'} h={'100%'} direction={'column'} align={'center'} justify={'space-between'} gap={14}>
-              <Center h={'100%'}>
-                <Paper w={165} h={165} bg={'#D6EBDC'} radius={'100%'} />
-                <Box className="absolute z-10" style={{ width: 200, height: 200 }}>
-                  <Image
-                    src={item.image || '/assets/pokeball.png'}
-                    alt={`pokemon-${item.name}`}
-                    fill
-                    sizes="200px"
-                    style={{ objectFit: 'contain' }}
-                    placeholder="blur"
-                    blurDataURL="/assets/pokeball.png"
-                  />
-                </Box>
-              </Center>
-              <Flex w={'100%'} align={'center'} justify={'space-between'}>
-                <Flex direction={'column'}>
-                  <Text fz={13} fw={500} c={'#7A7D80'} lh={'150%'} lts={'0%'}>
-                    #{item.id.padStart(3, '0')}
-                  </Text>
-                  <Text fz={18} fw={600} c={'#2F3133'} lh={'150%'} lts={'0%'} tt={'capitalize'}>
-                    {item.name}
-                  </Text>
+        {pokemonsData?.map((item, index) => {
+          if (!item.is_hide) {
+            return (
+              <Paper
+                key={index}
+                className="cursor-pointer"
+                w={280}
+                h={304}
+                py={24}
+                px={28}
+                bg={'white'}
+                radius={12}
+                onClick={() => handleOpenDetail(item)}
+              >
+                <Flex w={'100%'} h={'100%'} direction={'column'} align={'center'} justify={'space-between'} gap={14}>
+                  <Center h={'100%'}>
+                    <Paper w={165} h={165} bg={'#D6EBDC'} radius={'100%'} />
+                    <Box className="absolute z-10" style={{ width: 200, height: 200 }}>
+                      <Image
+                        src={item.image || '/assets/pokeball.png'}
+                        alt={`pokemon-${item.name}`}
+                        fill
+                        sizes="200px"
+                        style={{ objectFit: 'contain' }}
+                        placeholder="blur"
+                        blurDataURL="/assets/pokeball.png"
+                      />
+                    </Box>
+                  </Center>
+                  <Flex w={'100%'} align={'center'} justify={'space-between'}>
+                    <Flex direction={'column'}>
+                      <Text fz={13} fw={500} c={'#7A7D80'} lh={'150%'} lts={'0%'}>
+                        #{item.id.padStart(3, '0')}
+                      </Text>
+                      <Text fz={18} fw={600} c={'#2F3133'} lh={'150%'} lts={'0%'} tt={'capitalize'}>
+                        {item.name}
+                      </Text>
+                    </Flex>
+                    <IconLeaf />
+                  </Flex>
                 </Flex>
-                <IconLeaf />
-              </Flex>
-            </Flex>
-          </Paper>
-        ))}
+              </Paper>
+            );
+          }
+          return null;
+        })}
       </SimpleGrid>
       {!search && (
         <Center>

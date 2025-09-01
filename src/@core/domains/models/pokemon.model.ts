@@ -20,6 +20,7 @@ export class Pokemon {
       speed: number;
     },
     public image: string,
+    public is_hide: boolean,
   ) {}
 
   updateDetail(data: Pokemon) {
@@ -31,6 +32,7 @@ export class Pokemon {
     this.weakness = data.weakness;
     this.statistics = data.statistics;
     this.image = data.image;
+    this.is_hide = false;
   }
 
   updateWeaknessFromPokemonType(pokemonTypeData: PokemonType[]) {
@@ -57,6 +59,7 @@ export class Pokemon {
         speed: 0,
       },
       '',
+      false,
     );
   }
 
@@ -89,6 +92,7 @@ export class Pokemon {
       [],
       statistics,
       data.sprites.other.dream_world.front_default || data.sprites.other['official-artwork'].front_default,
+      false,
     );
   }
 
@@ -96,7 +100,7 @@ export class Pokemon {
     const rawId = data.pokemon.url.split('/')[6];
     return new Pokemon(
       rawId,
-      data.pokemon.url,
+      data.pokemon.name,
       [],
       0,
       0,
@@ -111,6 +115,7 @@ export class Pokemon {
         speed: 0,
       },
       '',
+      true,
     );
   }
 
@@ -132,6 +137,7 @@ export class Pokemon {
         speed: 0,
       },
       '',
+      false,
     );
   }
 }

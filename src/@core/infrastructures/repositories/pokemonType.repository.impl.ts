@@ -15,7 +15,7 @@ export class PokemonTypeRepositoryImpl implements PokemonTypeRepository {
   async getAll(params?: any): Promise<BaseResponse<PokemonType[]>> {
     try {
       const response = await this.httpService.get<PokemonTypeListResponseDTO>('/type', { params });
-      const pokemonTypes = response.results.map(PokemonType.fromApi);
+      const pokemonTypes = response.results.filter((item) => item.name !== 'unknown').map(PokemonType.fromApi);
 
       await Promise.all(
         pokemonTypes.map(async (pokemonType) => {

@@ -69,15 +69,17 @@ export class PokemonRepositoryImpl implements PokemonRepository {
     try {
       const pokemonTypeRepositoryImpl = new PokemonTypeRepositoryImpl(this.httpService);
       const response = await pokemonTypeRepositoryImpl.getDetail(params);
-      const pokemons = response.data?.pokemons.filter((item, index) => index < 20) || [];
+      const pokemons = response.data?.pokemons || [];
 
       await Promise.all(
-        pokemons.map(async (pokemon) => {
-          const detailResponse = await this.getDetail({ search: Number(pokemon.id) });
-          if (detailResponse.data) {
-            pokemon.updateDetail(detailResponse.data);
-          }
-        }),
+        pokemons
+          .filter((item, index) => index < 20)
+          .map(async (pokemon) => {
+            const detailResponse = await this.getDetail({ search: Number(pokemon.id) });
+            if (detailResponse.data) {
+              pokemon.updateDetail(detailResponse.data);
+            }
+          }),
       );
 
       return { data: pokemons };
