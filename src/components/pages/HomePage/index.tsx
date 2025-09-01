@@ -24,12 +24,10 @@ const HomePage = () => {
   const [listPokemonByFilterType, setListPokemonByFilterType] = useState<Pokemon[] | null | undefined>();
   const [metaPokemonByFilterType, setMetaPokemonByFilterType] = useState<Meta | null | undefined>();
   const pokemonController = new PokemonController();
-  const { data: pokemonsData, fetchNextPage, hasNextPage } = usePokemons(15);
+  const { data: pokemonsData, fetchNextPage, hasNextPage, refetch } = usePokemons(15);
   const { data: pokemonTypesData } = usePokemonTypes();
   const pokemons: Pokemon[] = pokemonsData?.pages.flatMap((page) => page.data!) ?? [];
   const meta = pokemonsData?.pages[pokemonsData.pages.length - 1]?.meta;
-
-  console.log({ pokemonsData });
 
   useEffect(() => {
     if (pokemonTypesData?.data && pokemons) {
@@ -47,24 +45,17 @@ const HomePage = () => {
 
   const handleFilterSearch = (value?: string) => {
     setSearch(value || '');
-
     const query: Record<string, string> = {};
-
     if (value) query.search = value;
     if (router.query.type) query.type = String(router.query.type);
-
     router.push({ pathname: '/', query }, undefined, { scroll: false });
-
     handleGetDetailBySearch(value);
   };
 
   const handleResetSearch = () => {
     const query: Record<string, string> = {};
-
     if (router.query.type) query.type = String(router.query.type);
-
     router.push({ pathname: '/', query }, undefined, { scroll: false });
-
     setSearch('');
     setDetailPokemon(undefined);
     handleResetMeta();
@@ -89,22 +80,16 @@ const HomePage = () => {
 
   const handleFilterType = (value?: 'all' | PokemonTypeValue | number) => {
     const query: Record<string, string> = {};
-
     if (value && value !== 'all') query.type = String(value);
     if (router.query.search) query.search = String(router.query.search);
-
     router.push({ pathname: '/', query }, undefined, { scroll: false });
-
     handleGetDetailType(String(value));
   };
 
   const handleResetFilterType = () => {
     const query: Record<string, string> = {};
-
     if (router.query.search) query.search = String(router.query.search);
-
     router.push({ pathname: '/', query }, undefined, { scroll: false });
-
     setListPokemonByFilterType(undefined);
     handleResetMeta();
   };
@@ -116,12 +101,12 @@ const HomePage = () => {
     setIsLoading(true);
     try {
       if (value !== 'all' && value) {
-        const response = await pokemonController.getAllPokemonByFilterType({ type: value });
+        const response = await pokemonController.getAllPokemonByFilterType({ type: value, page: 1, limit: 15 });
         setListPokemonByFilterType(response.data);
         setMetaPokemonByFilterType(response.meta!);
-        console.log({ response });
       } else {
         handleResetFilterType();
+        refetch();
       }
     } catch (error: any) {
       notifications.show({ title: 'Failed Fetch', message: error?.status?.message, color: 'red' });
@@ -130,19 +115,36 @@ const HomePage = () => {
     }
   }, 500);
 
+  const handleLoadMorePokemonFilterByType = async () => {
+    if (metaPokemonByFilterType && metaPokemonByFilterType.page < metaPokemonByFilterType.total_pages) {
+      const targetPage = metaPokemonByFilterType.page + 1;
+      const targetQueryParams = { ...metaPokemonByFilterType, page: targetPage };
+      const response = await pokemonController.getDetailHiddenPokemonByFilterType({
+        data: listPokemonByFilterType || [],
+        params: targetQueryParams,
+      });
+      setListPokemonByFilterType(response.data);
+      setMetaPokemonByFilterType(response.meta!);
+    }
+  };
+
   return (
     <Layout>
       <Banner />
       <Box className="-mt-[21vw]">
         <PokemonFilterHeader search={String(search)} onChangeSearch={handleFilterSearch} loading={isLoading} />
         <PokemonCollection
-          showLoadMore={String(search) === '' && hasNextPage}
+          showLoadMore={
+            metaPokemonByFilterType
+              ? metaPokemonByFilterType.page < metaPokemonByFilterType.total_pages
+              : String(search) === '' && hasNextPage
+          }
           onChangeFilterType={handleFilterType}
           pokemonsData={detailPokemon ? [detailPokemon] : listPokemonByFilterType ? listPokemonByFilterType : pokemons}
           // pokemonsData={[]}
           pokemonsMeta={metaPokemonByFilterType || meta}
           pokemonTypesData={pokemonTypesData?.data || []}
-          handleLoadMorePokemonData={fetchNextPage}
+          handleLoadMorePokemonData={listPokemonByFilterType ? handleLoadMorePokemonFilterByType : fetchNextPage}
         />
       </Box>
     </Layout>

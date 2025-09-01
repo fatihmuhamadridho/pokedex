@@ -17,7 +17,7 @@ export class PokemonRepositoryImpl implements PokemonRepository {
 
   async getAll(params?: PokemonQueryParams): Promise<BaseResponse<Pokemon[]>> {
     try {
-      const queryParams = Pokemon.toQueryParams(params! || { page: 1, limit: 10 });
+      const queryParams = Pokemon.toQueryParams(params || { page: 1, limit: 10 });
       const response = await this.httpService.get<PokemonListResponseDTO>('/pokemon', { params: queryParams });
       const pokemons = response.results.map(Pokemon.fromApi);
       const metaResponse = Pokemon.fromQueryParamsToPagination({ ...queryParams, count: response.count });
@@ -67,10 +67,12 @@ export class PokemonRepositoryImpl implements PokemonRepository {
       const pokemonTypeRepositoryImpl = new PokemonTypeRepositoryImpl(this.httpService);
       const response = await pokemonTypeRepositoryImpl.getDetail(params);
       const pokemons = response.data?.pokemons || [];
+      const queryParams = Pokemon.toQueryParams(params || { page: 1, limit: 10 });
+      const metaResponse = Pokemon.fromQueryParamsToPagination({ ...queryParams, count: pokemons.length });
 
       await Promise.all(
         pokemons
-          .filter((item, index) => index < 20)
+          .filter((item, index) => index > queryParams.offset! && index <= queryParams.offset! + queryParams.limit!)
           .map(async (pokemon) => {
             const detailResponse = await this.getDetail({ search: Number(pokemon.id) });
             if (detailResponse.data) {
@@ -81,13 +83,44 @@ export class PokemonRepositoryImpl implements PokemonRepository {
 
       return {
         data: pokemons,
-        meta: {
-          limit: 20,
-          total_items: pokemons.length,
-          page: 1,
-          total_pages: 100,
-        },
+        meta: metaResponse,
       };
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      return Promise.reject({
+        status: {
+          code: String(error.response?.status || 500),
+          message: `Something went wrong`,
+        },
+      });
+    }
+  }
+
+  async getDetailHiddenPokemonByFilterType(props: {
+    data: Pokemon[];
+    params: PokemonTypeDetailQueryParams;
+  }): Promise<BaseResponse<Pokemon[]>> {
+    try {
+      const queryParams = Pokemon.toQueryParams(props.params || { page: 1, limit: 10 });
+
+      const start = queryParams.offset!;
+      const end = start + queryParams.limit!;
+
+      await Promise.all(
+        props.data.slice(start, end).map(async (pokemon) => {
+          const detailResponse = await this.getDetail({ search: Number(pokemon.id) });
+          if (detailResponse.data) {
+            pokemon.updateDetail(detailResponse.data);
+          }
+        }),
+      );
+
+      const metaResponse = Pokemon.fromQueryParamsToPagination({
+        ...queryParams,
+        count: props.data.length,
+      });
+
+      return { data: props.data, meta: metaResponse };
     } catch (err: unknown) {
       const error = err as AxiosError;
       return Promise.reject({

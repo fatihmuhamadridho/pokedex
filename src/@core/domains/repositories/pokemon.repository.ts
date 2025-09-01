@@ -7,4 +7,8 @@ export interface PokemonRepository {
   getAll(params?: PokemonQueryParams): Promise<BaseResponse<Pokemon[]>>;
   getDetail(params?: PokemonDetailQueryParams): Promise<BaseResponse<Pokemon>>;
   getAllPokemonByFilterType(params?: PokemonTypeDetailQueryParams): Promise<BaseResponse<Pokemon[]>>;
+  getDetailHiddenPokemonByFilterType(props: {
+    data: Pokemon[];
+    params: PokemonTypeDetailQueryParams;
+  }): Promise<BaseResponse<Pokemon[]>>;
 }

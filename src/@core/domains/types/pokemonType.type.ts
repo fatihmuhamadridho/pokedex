@@ -23,6 +23,8 @@ export type PokemonTypeValue =
 
 export type PokemonTypeDetailQueryParams = {
   type?: string;
+  page?: number;
+  limit?: number;
 };
 
 export interface PokemonTypeListResponseDTO {
