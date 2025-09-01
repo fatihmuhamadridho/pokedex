@@ -1,4 +1,10 @@
-import { PokemonDetailResponseDTO, PokemonListItemDTO } from '../types/pokemon.type';
+import { Meta } from '../types/base.type';
+import {
+  PokemonDetailResponseDTO,
+  PokemonListItemDTO,
+  PokemonQueryParams,
+  PokemonQueryParamsDTO,
+} from '../types/pokemon.type';
 import { PokemonTypeDetailPokemonItemDTO } from '../types/pokemonType.type';
 import { PokemonType } from './pokemonType.model';
 
@@ -117,6 +123,29 @@ export class Pokemon {
       '',
       true,
     );
+  }
+
+  static toQueryParams(params: PokemonQueryParams): PokemonQueryParamsDTO {
+    const page = params.page ?? 1;
+    const limit = params.limit ?? 20;
+    const offset = (page - 1) * limit;
+
+    return { limit, offset };
+  }
+
+  static fromQueryParamsToPagination(data?: PokemonQueryParamsDTO & { count: number }): Meta {
+    const limit = data?.limit ?? 20;
+    const offset = data?.offset ?? 0;
+    const page = Math.floor(offset / limit) + 1;
+    const total_items = data?.count ?? 0;
+    const total_pages = Math.ceil(total_items / limit);
+
+    return {
+      page,
+      limit,
+      total_items,
+      total_pages,
+    };
   }
 
   static DummyData(): Pokemon {

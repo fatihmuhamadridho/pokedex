@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Banner from '../../organisms/Banner';
@@ -13,6 +14,7 @@ import { Pokemon } from '@/@core/domains/models/pokemon.model';
 import { useRouter } from 'next/router';
 import { notifications } from '@mantine/notifications';
 import { PokemonTypeValue } from '@/@core/domains/types/pokemonType.type';
+import { Meta } from '@/@core/domains/types/base.type';
 
 const HomePage = () => {
   const router = useRouter();
@@ -20,23 +22,28 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [detailPokemon, setDetailPokemon] = useState<Pokemon | null | undefined>();
   const [listPokemonByFilterType, setListPokemonByFilterType] = useState<Pokemon[] | null | undefined>();
+  const [metaPokemonByFilterType, setMetaPokemonByFilterType] = useState<Meta | null | undefined>();
   const pokemonController = new PokemonController();
-  const { data: pokemonsData } = usePokemons();
+  const { data: pokemonsData, fetchNextPage } = usePokemons(15);
   const { data: pokemonTypesData } = usePokemonTypes();
+  const pokemons: Pokemon[] = pokemonsData?.pages.flatMap((page) => page.data!) ?? [];
+  const meta = pokemonsData?.pages[pokemonsData.pages.length - 1]?.meta;
+
+  console.log({ listPokemonByFilterType });
 
   useEffect(() => {
-    if (pokemonTypesData?.data && pokemonsData?.data) {
-      if (
-        pokemonTypesData.data.length > 0 &&
-        pokemonsData.data.length > 0 &&
-        pokemonsData.data[0].weakness.length === 0
-      ) {
-        pokemonsData.data.map((item) => {
-          item.updateWeaknessFromPokemonType(pokemonTypesData.data || []);
+    if (pokemonTypesData?.data && pokemons) {
+      if (pokemonTypesData.data.length > 0 && pokemons.length > 0 && pokemons[0]!.weakness.length === 0) {
+        pokemons.map((item) => {
+          item!.updateWeaknessFromPokemonType(pokemonTypesData.data || []);
         });
       }
     }
-  }, [pokemonTypesData?.data, pokemonsData?.data]);
+  }, [pokemonTypesData?.data, pokemons]);
+
+  const handleResetMeta = () => {
+    setMetaPokemonByFilterType(undefined);
+  };
 
   const handleFilterSearch = (value?: string) => {
     setSearch(value || '');
@@ -60,6 +67,7 @@ const HomePage = () => {
 
     setSearch('');
     setDetailPokemon(undefined);
+    handleResetMeta();
   };
 
   const handleGetDetailBySearch = useDebouncedCallback(async (value?: string) => {
@@ -98,6 +106,7 @@ const HomePage = () => {
     router.push({ pathname: '/', query }, undefined, { scroll: false });
 
     setListPokemonByFilterType(undefined);
+    handleResetMeta();
   };
 
   const handleGetDetailType = useDebouncedCallback(async (value: string) => {
@@ -109,6 +118,8 @@ const HomePage = () => {
       if (value !== 'all' && value) {
         const response = await pokemonController.getAllPokemonByFilterType({ type: value });
         setListPokemonByFilterType(response.data);
+        setMetaPokemonByFilterType(response.meta!);
+        console.log({ response });
       } else {
         handleResetFilterType();
       }
@@ -127,15 +138,10 @@ const HomePage = () => {
         <PokemonCollection
           search={String(search)}
           onChangeFilterType={handleFilterType}
-          pokemonsData={
-            detailPokemon
-              ? [detailPokemon]
-              : listPokemonByFilterType
-                ? listPokemonByFilterType
-                : pokemonsData?.data || []
-          }
-          pokemonsMeta={pokemonsData?.meta}
+          pokemonsData={detailPokemon ? [detailPokemon] : listPokemonByFilterType ? listPokemonByFilterType : pokemons}
+          pokemonsMeta={metaPokemonByFilterType || meta}
           pokemonTypesData={pokemonTypesData?.data || []}
+          handleLoadMorePokemonData={fetchNextPage}
         />
       </Box>
     </Layout>

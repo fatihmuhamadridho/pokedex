@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export type PokemonQueryParamsDTO = {
+  limit?: number;
+  offset?: number;
+};
+
+export type PokemonQueryParams = {
+  page?: number;
+  limit?: number;
+};
+
 export type PokemonDetailQueryParams = {
   search?: string | number;
 };

@@ -13,10 +13,11 @@ interface PokemonCollectionProps {
   pokemonsData?: Pokemon[];
   pokemonsMeta?: BaseResponse['meta'];
   pokemonTypesData?: PokemonType[];
+  handleLoadMorePokemonData?: () => void;
 }
 
 const PokemonCollection = (props: PokemonCollectionProps) => {
-  const { search, onChangeFilterType, pokemonsData, pokemonsMeta, pokemonTypesData } = props;
+  const { search, onChangeFilterType, pokemonsData, pokemonsMeta, pokemonTypesData, handleLoadMorePokemonData } = props;
 
   return (
     <Flex w={'100%'} py={48} px={16} bg={'#EFF3F6'} justify={'center'}>
@@ -27,6 +28,7 @@ const PokemonCollection = (props: PokemonCollectionProps) => {
           pokemonsData={pokemonsData}
           pokemonsMeta={pokemonsMeta}
           pokemonTypesData={pokemonTypesData}
+          handleLoadMorePokemonData={handleLoadMorePokemonData}
         />
       </Flex>
     </Flex>

@@ -2,11 +2,11 @@
 import { Pokemon } from '../models/pokemon.model';
 import { PokemonRepository } from '../repositories/pokemon.repository';
 import { BaseResponse, BaseUseCase } from '../types/base.type';
-import { PokemonDetailQueryParams } from '../types/pokemon.type';
+import { PokemonDetailQueryParams, PokemonQueryParams } from '../types/pokemon.type';
 
-export class GetAllPokemonUseCase implements BaseUseCase<any, BaseResponse<Pokemon[]>> {
+export class GetAllPokemonUseCase implements BaseUseCase<PokemonQueryParams, BaseResponse<Pokemon[]>> {
   constructor(private pokemonRepository: PokemonRepository) {}
-  execute(params?: any): Promise<BaseResponse<Pokemon[]>> {
+  execute(params?: PokemonQueryParams): Promise<BaseResponse<Pokemon[]>> {
     return this.pokemonRepository.getAll(params);
   }
 }

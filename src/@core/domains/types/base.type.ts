@@ -4,7 +4,7 @@ type Status = {
   message: string;
 };
 
-type Meta = {
+export type Meta = {
   page: number;
   limit: number;
   total_items: number;

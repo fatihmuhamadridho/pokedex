@@ -14,10 +14,11 @@ interface PokemonListProps {
   pokemonsData?: Pokemon[];
   pokemonsMeta?: BaseResponse['meta'];
   pokemonTypesData?: PokemonType[];
+  handleLoadMorePokemonData?: () => void;
 }
 
 const PokemonList = (props: PokemonListProps) => {
-  const { search, pokemonsData, pokemonsMeta, pokemonTypesData } = props;
+  const { search, pokemonsData, pokemonsMeta, pokemonTypesData, handleLoadMorePokemonData } = props;
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure();
   const [selectedDetail, setSelectedDetail] = useState<Pokemon>(Pokemon.DummyData());
@@ -104,7 +105,13 @@ const PokemonList = (props: PokemonListProps) => {
       </SimpleGrid>
       {!search && (
         <Center>
-          <UnstyledButton className="!bg-[#3F5DB3]/[10%] rounded-[6px]" py={14} px={20} c={'#3F5DB3'}>
+          <UnstyledButton
+            className="!bg-[#3F5DB3]/[10%] rounded-[6px]"
+            py={14}
+            px={20}
+            c={'#3F5DB3'}
+            onClick={handleLoadMorePokemonData}
+          >
             Load more Pokémon
           </UnstyledButton>
         </Center>

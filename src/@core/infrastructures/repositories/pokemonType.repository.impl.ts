@@ -15,7 +15,7 @@ export class PokemonTypeRepositoryImpl implements PokemonTypeRepository {
   async getAll(params?: any): Promise<BaseResponse<PokemonType[]>> {
     try {
       const response = await this.httpService.get<PokemonTypeListResponseDTO>('/type', { params });
-      const pokemonTypes = response.results.filter((item) => item.name !== 'unknown').map(PokemonType.fromApi);
+      const pokemonTypes = response.results.filter(PokemonType.filterDataFromApi).map(PokemonType.fromApi);
 
       await Promise.all(
         pokemonTypes.map(async (pokemonType) => {
@@ -51,6 +51,12 @@ export class PokemonTypeRepositoryImpl implements PokemonTypeRepository {
       const response = await this.httpService.get<PokemonTypeDetailResponseDTO>(`/type/${params?.type}`);
       return {
         data: PokemonType.fromApiDetail(response),
+        meta: {
+          limit: 20,
+          total_items: response.pokemon.length,
+          page: 1,
+          total_pages: 100,
+        },
       };
     } catch (err) {
       const error = err as AxiosError;

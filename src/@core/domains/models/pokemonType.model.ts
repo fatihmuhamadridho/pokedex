@@ -24,6 +24,12 @@ export class PokemonType {
     return new PokemonType(String(data.id), data.name, weakness, data.pokemon.map(Pokemon.fromApiPokemonTypeDetail));
   }
 
+  static filterDataFromApi(data: PokemonTypeListItemDTO) {
+    if (!['unknown', 'stellar'].includes(data.name)) {
+      return data;
+    }
+  }
+
   static DummyData(): PokemonType {
     return new PokemonType('', '', [], []);
   }

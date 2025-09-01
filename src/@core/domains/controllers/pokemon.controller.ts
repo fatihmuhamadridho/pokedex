@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PokemonRepositoryImpl } from '@/@core/infrastructures/repositories/pokemon.repository.impl';
 import {
   GetAllPokemonByFilterTypeUseCase,
@@ -6,7 +5,7 @@ import {
   GetDetailPokemonUseCase,
 } from '../usecases/pokemon.usecase';
 import { HttpService } from '@/@core/infrastructures/services/http.service';
-import { PokemonDetailQueryParams } from '../types/pokemon.type';
+import { PokemonDetailQueryParams, PokemonQueryParams } from '../types/pokemon.type';
 import { PokemonTypeDetailQueryParams } from '../types/pokemonType.type';
 
 export class PokemonController {
@@ -21,7 +20,7 @@ export class PokemonController {
     this.getAllPokemonByFilterTypeUseCase = new GetAllPokemonByFilterTypeUseCase(pokemonRepositoryImpl);
   }
 
-  getAllPokemon(params?: any) {
+  getAllPokemon(params?: PokemonQueryParams) {
     return this.getAllPokemonUseCase.execute(params);
   }
 
